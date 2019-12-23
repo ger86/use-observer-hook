@@ -4,24 +4,22 @@ const useObserver = options => {
   const [elements, setElements] = useState([]);
   const [entries, setEntries] = useState([]);
 
-  const observer = useRef(null);
-
-  const observerOptions = options || {};
+  const observer = useRef(new IntersectionObserver(observedEntries => {
+    setEntries(observedEntries);
+  }, options));
 
   useEffect(() => {
+    const { current: currentObserver } = observer;
+    currentObserver.disconnect();
     if (elements.length) {
-      observer.current = new IntersectionObserver(observedEntries => {
-        setEntries(observedEntries);
-      }, observerOptions);
-
-      elements.forEach(element => observer.current.observe(element));
+      elements.forEach(element => currentObserver.observe(element));
     }
     return () => {
-      if (observer.current) {
-        observer.current.disconnect();
+      if (currentObserver) {
+        currentObserver.disconnect();
       }
     };
-  }, [elements, observerOptions]);
+  }, [elements]);
 
   return [observer.current, setElements, entries];
 };

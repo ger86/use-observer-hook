@@ -15,6 +15,8 @@ function App() {
     root: null
   });
 
+  console.log('render');
+
   useEffect(() => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
