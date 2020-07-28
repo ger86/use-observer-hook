@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-const useObserver = options => {
+const useObserver = function(options) {
   const [elements, setElements] = useState([]);
   const [entries, setEntries] = useState([]);
 
@@ -8,13 +8,13 @@ const useObserver = options => {
     setEntries(observedEntries);
   }, options));
 
-  useEffect(() => {
+  useEffect(function() {
     const { current: currentObserver } = observer;
     currentObserver.disconnect();
     if (elements.length) {
       elements.forEach(element => currentObserver.observe(element));
     }
-    return () => {
+    return function cleanUp() {
       if (currentObserver) {
         currentObserver.disconnect();
       }
